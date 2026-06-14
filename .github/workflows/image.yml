@@ -1,0 +1,33 @@
+name: push versioned image to aliyun
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract tag name
+        id: get_tag
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Pull image with the same tag
+        run: docker pull eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+
+      - name: make the tag
+        run: docker tag eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+
+      - name: Login to Aliyun Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: registry.cn-shanghai.aliyuncs.com
+          username: ${{ secrets.ALIYUN_DOCKER_USER }}
+          password: ${{ secrets.ALIYUN_DOCKER_PAT }}
+
+      - name: push the image
+        run: docker push registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+
+      - name: clean the images
+        run: docker rmi registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
