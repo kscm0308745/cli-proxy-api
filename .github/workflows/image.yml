@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Extract tag name
         id: get_tag
         run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
@@ -19,7 +19,7 @@ jobs:
           docker tag eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
 
       - name: Login to Aliyun Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: registry.cn-shanghai.aliyuncs.com
           username: ${{ secrets.ALIYUN_DOCKER_USER }}
