@@ -41,4 +41,4 @@ jobs:
           script: |
             cd /opt/module/cli-proxy-api
             docker compose down
-            docker compose up -d --image registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+            MY_IMAGE=registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} docker compose up -d
