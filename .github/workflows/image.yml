@@ -30,3 +30,15 @@ jobs:
 
       - name: clean the images
         run: docker rmi registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22  # 默认 SSH 端口，如有变化请修改
+          script: |
+            cd /opt/module/cli-proxy-api
+            docker compose down
+            docker compose up -d --image registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
