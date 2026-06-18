@@ -25,11 +25,10 @@ jobs:
           username: ${{ secrets.ALIYUN_DOCKER_USER }}
           password: ${{ secrets.ALIYUN_DOCKER_PAT }}
 
-      - name: push the image
-        run: docker push registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
-
-      - name: clean the images
-        run: docker rmi registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+      - name: push the image and clean local images
+        run: |
+          docker push registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
+          docker rmi registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} eceasy/cli-proxy-api:${{ steps.get_tag.outputs.TAG }}
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
