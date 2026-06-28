@@ -38,6 +38,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22  # 默认 SSH 端口，如有变化请修改
           script: |
-            cd /opt/module/cli-proxy-api
+            cd ${{ secrets.SERVER_WORK_DIR }}
             docker compose down
             MY_IMAGE=registry.cn-shanghai.aliyuncs.com/aliyunwsc/cli-proxy-api:${{ steps.get_tag.outputs.TAG }} docker compose up -d
